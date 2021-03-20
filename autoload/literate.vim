@@ -96,7 +96,7 @@ endfunction " }}}
 
 " Public API {{{
 
-function! eval#OrgEval() abort " {{{
+function! literate#EvalCode() abort " {{{
   let block = s:getSrcBlock()
 
   if !empty(block)
