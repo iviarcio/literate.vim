@@ -1,12 +1,14 @@
-*literate.txt: vim plugin for evaluating source code blocks
+*literate.txt*       For Vim version 8.2        Last change: 2021 march 30
+*literate*
 
-        #      # ##### ###### #####    ##   ##### ######
-        #      #   #   #      #    #  #  #    #   #
-        #      #   #   #####  #    # #    #   #   #####
-        #      #   #   #      #####  ######   #   #
-        #      #   #   #      #   #  #    #   #   #
-        ###### #   #   ###### #    # #    #   #   ######
+        #      # ##### ###### #####    ##   ##### ######~
+        #      #   #   #      #    #  #  #    #   #     ~
+        #      #   #   #####  #    # #    #   #   #####~
+        #      #   #   #      #####  ######   #   #     ~
+        #      #   #   #      #   #  #    #   #   #     ~
+        ###### #   #   ###### #    # #    #   #   ######~
 
+          vim plugin for evaluating source code blocks~
 ==============================================================================
 CONTENTS                                                     *literateContents*
 
@@ -66,6 +68,10 @@ String that will be used to match the end of a source block.
 Type: string
 Default: |tempname()|
 Name of the temporary file to use to evaluate source blocks.
+                                                        *'eval_res_file'*
+Type: string
+Default: |tempname()|
+Name of the temporary file to get the evaluation result of source blocks.
                                                           *'eval_run_cmd'*
 Type: dictionary
 Default: { 'python': 'python3',
@@ -85,9 +91,9 @@ https://github.com/iviarcio/literate.vim to add more langs.
 ==============================================================================
 5. Mappings                                                  *literateMappings*
 
-<leader>e                                                   *EvalCode
+<leader>e                                                   *EvalCode*
                 Evaluates the current source block.
 
 ==============================================================================
 
- vim:tw=78:sw=4:ft=help:norl:
+ vim:tw=78:ts=8:noet:ft=help:norl:
