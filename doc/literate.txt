@@ -1,0 +1,93 @@
+*literate.txt: vim plugin for evaluating source code blocks
+
+        #      # ##### ###### #####    ##   ##### ######
+        #      #   #   #      #    #  #  #    #   #
+        #      #   #   #####  #    # #    #   #   #####
+        #      #   #   #      #####  ######   #   #
+        #      #   #   #      #   #  #    #   #   #
+        ###### #   #   ###### #    # #    #   #   ######
+
+==============================================================================
+CONTENTS                                                     *literateContents*
+
+    1. Intro ........................................|literateIntro|
+    2. Functionality provided .......................|literateFunctionality|
+    3. Commands .....................................|literateCommands|
+    4. Global options ...............................|literateGlobalOptions|
+    5. Mappings .....................................|literateMappings|
+
+
+==============================================================================
+1. Intro                                                        *literateIntro*
+
+literate is a simple plugin for evaluating source code blocks written in
+python, perl, sh or bash. It works by saving the contents of a source block
+to a temporary file, evaluating it using a configurable command, and putting
+the results in the current buffer.
+
+The result of a source block in literate is collected from stdout, so all
+source blocks must send output to stdout in order for it to work (this is
+different from repl, in which the last returned value is used).
+
+==============================================================================
+2. Functionality provided                       *literateFunctionalityProvided*
+
+literate provides just one functionality:
+
+    * Source block evaluation. Of course, you have the ability to edit and
+    update source blocks anytime
+
+==============================================================================
+3. Commands                                                  *literateCommands*
+
+:EvalCode                                                        *:EvalCode*
+
+Evaluates the current source block and appends the result on the line after
+it. For this command to be succesful, the cursor must be between a
+line matching | ```` <lang>| and a line matching | ````|.
+
+==============================================================================
+4. Global options                                       *literateGlobalOptions*
+
+                                                         *'eval_map_key'*
+Type: boolean
+Default: 1
+Whether to activate the default mappings or not. See |literateMappings|.
+                                                        *'eval_start_src'*
+Type: string
+Default: '``` '
+String that will be used to match the start of a source code block. Note
+the space before the <lang>.
+                                                          *'eval_end_src'*
+Type: string
+Default: '```'
+String that will be used to match the end of a source block.
+                                                        *'eval_tmp_file'*
+Type: string
+Default: |tempname()|
+Name of the temporary file to use to evaluate source blocks.
+                                                          *'eval_run_cmd'*
+Type: dictionary
+Default: { 'python': 'python3',
+           'sh': 'sh',
+           'bash': 'bash',
+           'perl': 'perl' }
+Dictionary of commands to run when evaluating source blocks. Each item
+must be of the form `lang:command` where `lang` is a string that matches the
+filetype of the target language, and `command` is the command to run when
+evaluating a source block of that language.
+
+If you want to add more langs, you'll have to copy the defaults and extend it
+in your |vimrc| , or you can just start from scratch and add only
+those languages you do use. Feel free to submit a pull request to
+https://github.com/iviarcio/literate.vim to add more langs.
+
+==============================================================================
+5. Mappings                                                  *literateMappings*
+
+<leader>e                                                   *EvalCode
+                Evaluates the current source block.
+
+==============================================================================
+
+ vim:tw=78:sw=4:ft=help:norl:
