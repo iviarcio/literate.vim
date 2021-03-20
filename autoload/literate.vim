@@ -7,32 +7,32 @@
 
 " Global options {{{
 
-if !exists("g:eval_start_src") " {{{{
+if !exists("g:eval_start_src")
   let g:eval_start_src = "```"
-endif " }}}
-if !exists("g:eval_end_src") " {{{
+endif
+if !exists("g:eval_end_src")
   let g:eval_end_src   = "```"
-endif " }}}
-if !exists("g:eval_tmp_file") " {{{
+endif
+if !exists("g:eval_tmp_file")
   let g:eval_tmp_file  = tempname()
-endif " }}}
-if !exists("g:eval_edit_file") " {{{
-  let g:eval_edit_file = tempname() . '.tmp'
-endif " }}}
-if !exists("g:eval_run_cmd") " {{{
+endif
+if !exists("g:eval_res_file")
+  let g:eval_res_file = tempname()
+endif
+if !exists("g:eval_run_cmd")
   let g:eval_run_cmd = {
         \ 'python': 'python3',
         \ 'sh': 'sh',
         \ 'bash': 'bash',
         \ 'perl': 'perl',
         \}
-endif " }}}
+endif
 
 " }}}
 
 " Helper functions {{{
 
-function! s:getRange() abort " {{{
+function! s:getRange() abort
   " save cursor position
   normal! mq
 
@@ -54,9 +54,9 @@ function! s:getRange() abort " {{{
   else
     return [start, end]
   endif
-endfunction " }}}
+endfunction
 
-function! s:getLang(lnum) abort " {{{
+function! s:getLang(lnum) abort
   let matches = matchlist(getline(a:lnum), '\c^\s*'.g:eval_start_src.'\s\+\(\w\+\)')
 
   " No :lang in source block header
@@ -65,9 +65,9 @@ function! s:getLang(lnum) abort " {{{
   else
     return matches[1]
   endif
-endfunction " }}}
+endfunction
 
-function! s:getSrcBlock() abort " {{{
+function! s:getSrcBlock() abort
   let [start, end] = s:getRange()
 
   if start < 0
@@ -80,23 +80,17 @@ function! s:getSrcBlock() abort " {{{
     endfor
     return {'start': start, 'end': end, 'lines': lines}
   endif
-endfunction " }}}
+endfunction
 
-function! s:cleanStr(str) abort " {{{
-  return substitute(a:str, "\n", "", "g")
-endfunction " }}}
-
-function! s:writeSrcBlock(block) abort " {{{
+function! s:writeSrcBlock(block) abort
   call writefile(a:block, g:eval_tmp_file)
-endfunction " }}}
-
-" }}}
+endfunction
 
 " }}}
 
 " Public API {{{
 
-function! literate#EvalCode() abort " {{{
+function! literate#EvalCode() abort
   let block = s:getSrcBlock()
 
   if !empty(block)
@@ -104,8 +98,13 @@ function! literate#EvalCode() abort " {{{
     let cmd   = get(g:eval_run_cmd, lang, "")
     if !empty(cmd)
       call s:writeSrcBlock(block['lines'])
-      let result = s:cleanStr(system(cmd . ' ' . g:eval_tmp_file))
-      call append(block['end'], result)
+      let result = system(cmd . ' ' . g:eval_tmp_file . ' > ' . g:eval_res_file)
+      let lnum = block['end']
+      for line in readfile(g:eval_res_file, '')
+	    call append(lnum, line)
+        let lnum = lnum+1
+      endfor
+      echo ''
     else
       if empty(lang)
         echo 'Language not specified'
@@ -114,6 +113,6 @@ function! literate#EvalCode() abort " {{{
       endif
     endif
   endif
-endfunction " }}}
+endfunction
 
 " }}}
